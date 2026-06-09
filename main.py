@@ -6,7 +6,7 @@ import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Depends, HTTPException, Query, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
@@ -39,7 +39,23 @@ app = FastAPI(title="LINE 群發貼文系統", lifespan=lifespan)
 
 # 掛載靜態檔案
 app.mount("/static", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "static")), name="static")
-app.mount("/sketches", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "sketches")), name="sketches")
+
+
+# ─── 設計草稿瀏覽 ───
+
+@app.get("/sketches/{path:path}")
+async def serve_sketch(path: str):
+    sketch_dir = os.path.join(os.path.dirname(__file__), "sketches")
+    file_path = os.path.normpath(os.path.join(sketch_dir, path))
+    # 安全檢查：確保仍在 sketches 目錄內
+    if not file_path.startswith(os.path.normpath(sketch_dir)):
+        raise HTTPException(403)
+    if not os.path.isfile(file_path):
+        raise HTTPException(404)
+    if file_path.endswith(".html"):
+        with open(file_path, encoding="utf-8") as f:
+            return HTMLResponse(f.read())
+    return FileResponse(file_path)
 
 
 # ─── Pydantic 模型 ───
