@@ -10,14 +10,17 @@ body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Noto Sans TC",sans-serif;
   min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;
   background:#0b0e14;
-  background-image: repeating-linear-gradient(
-      0deg, transparent, transparent 40px,
-      rgba(255,255,255,0.008) 40px, rgba(255,255,255,0.008) 41px
+  background-image: 
+    /* Diagonal weave pattern */
+    repeating-linear-gradient(
+      45deg, transparent, transparent 20px,
+      rgba(255,255,255,0.015) 20px, rgba(255,255,255,0.015) 21px
     ),
     repeating-linear-gradient(
-      90deg, transparent, transparent 40px,
-      rgba(255,255,255,0.008) 40px, rgba(255,255,255,0.008) 41px
+      -45deg, transparent, transparent 20px,
+      rgba(255,255,255,0.015) 20px, rgba(255,255,255,0.015) 21px
     );
+  background-size: 42px 42px;
 }
 
 /* Glass card */
@@ -71,6 +74,11 @@ body{
 }
 .avatar-inner span{
   font-size:42px;line-height:1;filter:drop-shadow(0 2px 8px rgba(6,199,85,0.3));
+  animation:crown-breathe 3s ease-in-out infinite;
+}
+@keyframes crown-breathe{
+  0%,100%{transform:scale(0.92)}
+  50%{transform:scale(1.06)}
 }
 
 h1{
