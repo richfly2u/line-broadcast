@@ -31,21 +31,35 @@ body{
   overflow:hidden;
 }
 
-/* Animated gradient border */
+/* Animated gradient border - rainbow */
 .card::after{
   content:'';
   position:absolute;inset:-2px;
   border-radius:30px;
-  background:linear-gradient(135deg, rgba(6,199,85,0.3), transparent 40%, transparent 60%, rgba(6,199,85,0.15));
+  background:conic-gradient(from 0deg, #ff0066, #ff6600, #ffcc00, #00cc44, #0099ff, #6633ff, #ff0066);
+  animation:border-rainbow 5s linear infinite;
   z-index:-1;
 }
+@keyframes border-rainbow{
+  0%{background:conic-gradient(from 0deg, #ff0066, #ff6600, #ffcc00, #00cc44, #0099ff, #6633ff, #ff0066)}
+  25%{background:conic-gradient(from 90deg, #ff0066, #ff6600, #ffcc00, #00cc44, #0099ff, #6633ff, #ff0066)}
+  50%{background:conic-gradient(from 180deg, #ff0066, #ff6600, #ffcc00, #00cc44, #0099ff, #6633ff, #ff0066)}
+  75%{background:conic-gradient(from 270deg, #ff0066, #ff6600, #ffcc00, #00cc44, #0099ff, #6633ff, #ff0066)}
+  100%{background:conic-gradient(from 360deg, #ff0066, #ff6600, #ffcc00, #00cc44, #0099ff, #6633ff, #ff0066)}
+}
 
-/* Glow dot */
+/* Glow dot - rainbow */
 .glow-dot{
   position:absolute;top:-80px;right:-80px;width:200px;height:200px;
   border-radius:50%;
-  background:radial-gradient(circle, rgba(6,199,85,0.12) 0%, transparent 70%);
+  background:conic-gradient(from 0deg, rgba(255,0,102,0.15), rgba(255,102,0,0.1), rgba(255,204,0,0.12), rgba(0,204,68,0.1), rgba(0,153,255,0.15), rgba(102,51,255,0.12), rgba(255,0,102,0.15));
+  animation:glow-dot-spin 6s linear infinite;
   pointer-events:none;
+  filter:blur(10px);
+}
+@keyframes glow-dot-spin{
+  0%{transform:rotate(0deg)}
+  100%{transform:rotate(360deg)}
 }
 
 /* Avatar with glow */
@@ -55,14 +69,17 @@ body{
 }
 .avatar-glow{
   position:absolute;inset:-8px;border-radius:50%;
-  background:linear-gradient(135deg, #06C755, #00e061, #06C755);
-  opacity:0.35;
-  animation:glow-rotate 3s linear infinite;
+  background:conic-gradient(#ff0066, #ff6600, #ffcc00, #00cc44, #0099ff, #6633ff, #ff0066);
+  opacity:0.4;
+  animation:rainbow-spin 4s linear infinite, rainbow-pulse 2s ease-in-out infinite;
 }
-@keyframes glow-rotate{
-  0%{transform:rotate(0deg) scale(1);opacity:0.35}
-  50%{transform:rotate(180deg) scale(1.15);opacity:0.5}
-  100%{transform:rotate(360deg) scale(1);opacity:0.35}
+@keyframes rainbow-spin{
+  0%{transform:rotate(0deg)}
+  100%{transform:rotate(360deg)}
+}
+@keyframes rainbow-pulse{
+  0%,100%{opacity:0.4;transform:rotate(0deg) scale(1)}
+  50%{opacity:0.7;transform:rotate(180deg) scale(1.2)}
 }
 .avatar-inner{
   position:relative;z-index:1;
@@ -145,10 +162,10 @@ h1{
 /* Badge */
 .badge{
   display:inline-flex;align-items:center;gap:4px;
-  background:rgba(6,199,85,0.1);
-  color:#06C755;font-size:13px;font-weight:600;
+  background:rgba(255,102,0,0.1);
+  color:#ff6600;font-size:13px;font-weight:600;
   padding:6px 14px;border-radius:20px;margin-bottom:16px;
-  border:1px solid rgba(6,199,85,0.15);
+  border:1px solid rgba(255,102,0,0.15);
 }
 
 .note{
