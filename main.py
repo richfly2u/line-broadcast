@@ -39,6 +39,7 @@ app = FastAPI(title="LINE 群發貼文系統", lifespan=lifespan)
 
 # 掛載靜態檔案
 app.mount("/static", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "static")), name="static")
+app.mount("/sketches", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "sketches")), name="sketches")
 
 
 # ─── Pydantic 模型 ───
