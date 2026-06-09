@@ -35,23 +35,16 @@ body{
   overflow:hidden;
 }
 
-/* Rainbow border - static */
+/* Card border - subtle */
 .card::after{
   content:'';
-  position:absolute;inset:-2px;
-  border-radius:30px;
-  background:conic-gradient(from 0deg, #ff0066, #ff6600, #ffcc00, #00cc44, #0099ff, #6633ff, #ff0066);
-  opacity:0.4;
+  position:absolute;inset:-1px;
+  border-radius:29px;
+  background:rgba(255,255,255,0.06);
   z-index:-1;
 }
 
-/* Glow dot - neutral */
-.glow-dot{
-  position:absolute;top:-120px;right:-120px;width:300px;height:300px;
-  border-radius:50%;
-  background:radial-gradient(circle, rgba(180,200,255,0.06) 0%, transparent 70%);
-  pointer-events:none;
-}
+/* Glow dot - removed */
 
 /* Avatar with glow */
 .avatar-wrap{
@@ -192,7 +185,6 @@ h1{
 <body>
 
 <div class="card">
-  <div class="glow-dot"></div>
 
   <div class="badge">🌟 榮哥好友限定</div>
 
