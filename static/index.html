@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LINE 群發管理後台</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  background: #f5f0eb;
+  color: #3d3d3d;
+  min-height: 100vh;
+}
+.nav {
+  background: #1a1a2e;
+  color: white;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.nav h1 { font-size: 18px; font-weight: 600; }
+.nav .sub { font-size: 12px; color: #8888aa; }
+.nav .badge {
+  margin-left: auto;
+  background: #e94560;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+.container { max-width: 960px; margin: 0 auto; padding: 20px; }
+
+.tabs { display: flex; gap: 4px; margin-bottom: 20px; }
+.tab {
+  padding: 10px 24px;
+  background: #e8e0d8;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  transition: all 0.2s;
+}
+.tab.active { background: white; color: #1a1a2e; font-weight: 600; }
+.tab:hover:not(.active) { background: #ddd5cc; }
+
+.panel { display: none; background: white; border-radius: 0 8px 8px 8px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.panel.active { display: block; }
+
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 13px; font-weight: 500; color: #555; margin-bottom: 6px; }
+.form-group input, .form-group textarea, .form-group select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid #ddd5cc;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+.form-group input:focus, .form-group textarea:focus { outline: none; border-color: #e94560; }
+.form-group textarea { min-height: 120px; resize: vertical; }
+.form-row { display: flex; gap: 12px; }
+.form-row .form-group { flex: 1; }
+
+.btn {
+  padding: 10px 28px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary { background: #e94560; color: white; }
+.btn-primary:hover { background: #d63850; }
+.btn-success { background: #0f3460; color: white; }
+.btn-success:hover { background: #0a2647; }
+.btn-outline { background: transparent; border: 1.5px solid #ddd5cc; color: #666; }
+.btn-outline:hover { border-color: #e94560; color: #e94560; }
+.btn-sm { padding: 6px 14px; font-size: 12px; }
+.btn-danger { background: #e74c3c; color: white; }
+.btn-warning { background: #f39c12; color: white; }
+
+.post-list { list-style: none; }
+.post-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f0ebe4;
+  gap: 12px;
+}
+.post-item:last-child { border-bottom: none; }
+.post-item:hover { background: #faf8f5; }
+.post-status {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.status-draft { background: #eee; color: #888; }
+.status-scheduled { background: #fff3cd; color: #856404; }
+.status-sent { background: #d4edda; color: #155724; }
+.status-failed { background: #f8d7da; color: #721c24; }
+
+.post-title { flex: 1; font-size: 14px; font-weight: 500; }
+.post-time { font-size: 12px; color: #999; white-space: nowrap; }
+.post-actions { display: flex; gap: 6px; }
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 999;
+  justify-content: center;
+  align-items: center;
+}
+.modal-overlay.show { display: flex; }
+.modal-box {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  max-width: 560px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.modal-box h2 { font-size: 18px; margin-bottom: 16px; }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  text-align: center;
+  padding: 16px 8px;
+  background: #faf8f5;
+  border-radius: 12px;
+  border: 1px solid #f0ebe4;
+}
+.stat-card .num { font-size: 28px; font-weight: 700; color: #1a1a2e; }
+.stat-card .label { font-size: 12px; color: #888; margin-top: 4px; }
+.stat-card.draft .num { color: #888; }
+.stat-card.scheduled .num { color: #f39c12; }
+.stat-card.sent .num { color: #27ae60; }
+.stat-card.failed .num { color: #e74c3c; }
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #1a1a2e;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  z-index: 9999;
+  animation: slideUp 0.3s;
+}
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@media (max-width: 640px) {
+  .stats-grid { grid-template-columns: repeat(3, 1fr); }
+  .form-row { flex-direction: column; }
+  .post-item { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <h1>📨 LINE 群發管理</h1>
+  <span class="sub">自動排程貼文系統</span>
+  <span class="badge" id="navBadge">0</span>
+</div>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" data-tab="dashboard">📊 儀表板</button>
+    <button class="tab" data-tab="compose">✏️ 新增貼文</button>
+    <button class="tab" data-tab="posts">📋 貼文列表</button>
+    <button class="tab" data-tab="logs">📜 發送記錄</button>
+  </div>
+
+  <!-- 儀表板 -->
+  <div class="panel active" id="panel-dashboard">
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card"><div class="num" id="statTotal">-</div><div class="label">總貼文</div></div>
+      <div class="stat-card draft"><div class="num" id="statDraft">-</div><div class="label">草稿</div></div>
+      <div class="stat-card scheduled"><div class="num" id="statScheduled">-</div><div class="label">排程中</div></div>
+      <div class="stat-card sent"><div class="num" id="statSent">-</div><div class="label">已發送</div></div>
+      <div class="stat-card failed"><div class="num" id="statFailed">-</div><div class="label">失敗</div></div>
+    </div>
+    <h3 style="margin-bottom:12px;">⚡ 快速操作</h3>
+    <button class="btn btn-primary" onclick="switchTab('compose')">✏️ 寫新貼文</button>
+    <button class="btn btn-success" onclick="switchTab('posts')" style="margin-left:8px;">📋 檢視貼文</button>
+  </div>
+
+  <!-- 新增貼文 -->
+  <div class="panel" id="panel-compose">
+    <h2 style="margin-bottom:16px;">✏️ 新增貼文</h2>
+
+    <div class="form-group">
+      <label>訊息類型</label>
+      <select id="msgType">
+        <option value="text">純文字</option>
+        <option value="image">文字 + 圖片</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>標題（僅內部管理用）</label>
+      <input id="postTitle" placeholder="例：法會便當通知">
+    </div>
+
+    <div class="form-group">
+      <label>📝 訊息內容</label>
+      <textarea id="postContent" placeholder="輸入要發送的內容..."></textarea>
+    </div>
+
+    <div class="form-group" id="imageUrlGroup" style="display:none;">
+      <label>🖼️ 圖片網址</label>
+      <input id="imageUrl" placeholder="https://...">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>⏰ 排程時間（留空=立即存為草稿）</label>
+        <input id="scheduleTime" type="datetime-local">
+      </div>
+      <div class="form-group">
+        <label>📁 存為範本（可選）</label>
+        <input id="templateName" placeholder="範本名稱（留空則不存）">
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <button class="btn btn-primary" onclick="saveDraft()">💾 存為草稿</button>
+      <button class="btn btn-success" onclick="schedulePost()">⏰ 排程發送</button>
+      <button class="btn btn-warning" onclick="sendNow()">📨 立即發送</button>
+    </div>
+  </div>
+
+  <!-- 貼文列表 -->
+  <div class="panel" id="panel-posts">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h2>📋 貼文列表</h2>
+      <button class="btn btn-primary btn-sm" onclick="switchTab('compose')">+ 新增</button>
+    </div>
+    <div style="margin-bottom:12px;">
+      <select id="filterStatus" onchange="loadPosts()" style="padding:6px 12px;border-radius:8px;border:1.5px solid #ddd5cc;">
+        <option value="all">全部</option>
+        <option value="draft">草稿</option>
+        <option value="scheduled">排程中</option>
+        <option value="sent">已發送</option>
+        <option value="failed">失敗</option>
+      </select>
+    </div>
+    <ul class="post-list" id="postList">
+      <div class="empty-state"><div class="icon">📭</div><div>尚無貼文</div></div>
+    </ul>
+  </div>
+
+  <!-- 發送記錄 -->
+  <div class="panel" id="panel-logs">
+    <h2 style="margin-bottom:16px;">📜 發送記錄</h2>
+    <ul class="post-list" id="logList">
+      <div class="empty-state"><div class="icon">📭</div><div>尚無發送記錄</div></div>
+    </ul>
+  </div>
+</div>
+
+<!-- 編輯 Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-box">
+    <h2>✏️ 編輯貼文</h2>
+    <div class="form-group"><label>標題</label><input id="editTitle"></div>
+    <div class="form-group"><label>內容</label><textarea id="editContent" rows="5"></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label>類型</label>
+        <select id="editMsgType">
+          <option value="text">文字</option>
+          <option value="image">文字+圖片</option>
+        </select>
+      </div>
+      <div class="form-group"><label>排程時間</label><input id="editSchedule" type="datetime-local"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-success" onclick="saveEdit()">💾 儲存</button>
+      <button class="btn btn-outline" onclick="closeEdit()">取消</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '/api';
+let editingId = null;
+
+// Tab 切換
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('panel-' + t.dataset.tab).classList.add('active');
+    if (t.dataset.tab === 'dashboard') loadStats();
+    if (t.dataset.tab === 'posts') loadPosts();
+    if (t.dataset.tab === 'logs') loadLogs();
+  });
+});
+function switchTab(name) {
+  const tab = document.querySelector(`.tab[data-tab="${name}"]`);
+  if (tab) tab.click();
+}
+
+// 圖片類型切換
+document.getElementById('msgType').onchange = function() {
+  document.getElementById('imageUrlGroup').style.display = this.value === 'image' ? 'block' : 'none';
+};
+
+// Toast
+function toast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+
+// 載入統計
+async function loadStats() {
+  try {
+    const r = await fetch(`${API}/stats`);
+    const d = await r.json();
+    document.getElementById('statTotal').textContent = d.total_posts;
+    document.getElementById('statDraft').textContent = d.draft;
+    document.getElementById('statScheduled').textContent = d.scheduled;
+    document.getElementById('statSent').textContent = d.sent;
+    document.getElementById('statFailed').textContent = d.failed;
+    document.getElementById('navBadge').textContent = d.scheduled;
+  } catch(e) { console.error('loadStats', e); }
+}
+
+// 載入貼文列表
+async function loadPosts() {
+  const filter = document.getElementById('filterStatus').value;
+  try {
+    const r = await fetch(`${API}/posts`);
+    let posts = await r.json();
+    if (filter !== 'all') posts = posts.filter(p => p.status === filter);
+
+    const list = document.getElementById('postList');
+    if (!posts.length) {
+      list.innerHTML = '<div class="empty-state"><div class="icon">📭</div><div>尚無貼文</div></div>';
+      return;
+    }
+    list.innerHTML = posts.map(p => {
+      const statusClass = p.status === 'draft' ? 'status-draft'
+        : p.status === 'scheduled' ? 'status-scheduled'
+        : p.status === 'sent' ? 'status-sent' : 'status-failed';
+      return `<li class="post-item">
+        <span class="post-status ${statusClass}">${statusLabel(p.status)}</span>
+        <span class="post-title">${esc(p.title || p.content?.slice(0, 30) || '(無標題)')}</span>
+        <span class="post-time">${p.schedule_at ? '⏰'+fmt(p.schedule_at) : p.sent_at ? '✅'+fmt(p.sent_at) : ''}</span>
+        <span class="post-actions">
+          ${p.status === 'draft' || p.status === 'scheduled' ? `<button class="btn btn-sm btn-outline" onclick="editPost(${p.id})">編輯</button><button class="btn btn-sm btn-warning" onclick="sendNowById(${p.id})">立即發</button><button class="btn btn-sm btn-danger" onclick="deletePost(${p.id})">刪除</button>` : ''}
+        </span>
+      </li>`;
+    }).join('');
+  } catch(e) { console.error('loadPosts', e); }
+}
+
+function statusLabel(s) {
+  return s === 'draft' ? '草稿' : s === 'scheduled' ? '排程中' : s === 'sent' ? '已發送' : '失敗';
+}
+
+// 存為草稿
+async function saveDraft() {
+  const data = getFormData();
+  if (!data.content) { toast('請填寫內容'); return; }
+  data.status = 'draft';
+  try {
+    const r = await fetch(`${API}/posts`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(data),
+    });
+    if (r.ok) { toast('✅ 已存為草稿'); clearForm(); loadStats(); }
+  } catch(e) { toast('❌ 儲存失敗'); }
+}
+
+// 排程發送
+async function schedulePost() {
+  const data = getFormData();
+  if (!data.content) { toast('請填寫內容'); return; }
+  if (!data.schedule_at) { toast('請選擇排程時間'); return; }
+  data.status = 'scheduled';
+  try {
+    const r = await fetch(`${API}/posts`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(data),
+    });
+    if (r.ok) { toast('✅ 已排程'); clearForm(); loadStats(); }
+  } catch(e) { toast('❌ 排程失敗'); }
+}
+
+// 立即發送
+async function sendNow() {
+  const data = getFormData();
+  if (!data.content) { toast('請填寫內容'); return; }
+  if (!confirm('確定立即發送給所有好友？')) return;
+  try {
+    const r = await fetch(`${API}/send`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        content: data.content,
+        msg_type: data.msg_type,
+        image_url: data.image_url,
+      }),
+    });
+    const result = await r.json();
+    if (result.status === 'success') {
+      toast('✅ 已發送成功！');
+      clearForm();
+      loadStats();
+    } else {
+      toast(`❌ 發送失敗: ${result.response?.slice(0,50) || '請檢查 token'}`);
+    }
+  } catch(e) { toast('❌ 發送失敗'); }
+}
+
+async function sendNowById(id) {
+  if (!confirm('確定立即發送此貼文？')) return;
+  try {
+    const r = await fetch(`${API}/send`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ post_id: id }),
+    });
+    const result = await r.json();
+    if (result.status === 'success') {
+      toast('✅ 已發送！');
+      loadPosts();
+      loadStats();
+    } else {
+      toast('❌ 發送失敗');
+    }
+  } catch(e) { toast('❌ 發送失敗'); }
+}
+
+function getFormData() {
+  return {
+    title: document.getElementById('postTitle').value,
+    content: document.getElementById('postContent').value,
+    image_url: document.getElementById('imageUrl').value,
+    msg_type: document.getElementById('msgType').value,
+    schedule_at: document.getElementById('scheduleTime').value ? new Date(document.getElementById('scheduleTime').value).toISOString() : null,
+    template_name: document.getElementById('templateName').value,
+  };
+}
+
+function clearForm() {
+  document.getElementById('postTitle').value = '';
+  document.getElementById('postContent').value = '';
+  document.getElementById('imageUrl').value = '';
+  document.getElementById('scheduleTime').value = '';
+  document.getElementById('templateName').value = '';
+}
+
+// 編輯貼文
+async function editPost(id) {
+  try {
+    const r = await fetch(`${API}/posts/${id}`);
+    const p = await r.json();
+    editingId = id;
+    document.getElementById('editTitle').value = p.title || '';
+    document.getElementById('editContent').value = p.content || '';
+    document.getElementById('editMsgType').value = p.msg_type || 'text';
+    document.getElementById('editSchedule').value = p.schedule_at ? p.schedule_at.slice(0,16) : '';
+    document.getElementById('editModal').classList.add('show');
+  } catch(e) { toast('❌ 載入失敗'); }
+}
+
+function closeEdit() {
+  document.getElementById('editModal').classList.remove('show');
+  editingId = null;
+}
+
+async function saveEdit() {
+  if (!editingId) return;
+  const data = {
+    title: document.getElementById('editTitle').value,
+    content: document.getElementById('editContent').value,
+    msg_type: document.getElementById('editMsgType').value,
+    schedule_at: document.getElementById('editSchedule').value ? new Date(document.getElementById('editSchedule').value).toISOString() : null,
+  };
+  try {
+    const r = await fetch(`${API}/posts/${editingId}`, {
+      method: 'PUT',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(data),
+    });
+    if (r.ok) { toast('✅ 已更新'); closeEdit(); loadPosts(); loadStats(); }
+  } catch(e) { toast('❌ 更新失敗'); }
+}
+
+// 刪除貼文
+async function deletePost(id) {
+  if (!confirm('確定刪除此貼文？')) return;
+  try {
+    await fetch(`${API}/posts/${id}`, { method: 'DELETE' });
+    toast('🗑️ 已刪除');
+    loadPosts();
+    loadStats();
+  } catch(e) { toast('❌ 刪除失敗'); }
+}
+
+// 載入發送記錄
+async function loadLogs() {
+  try {
+    const r = await fetch(`${API}/logs`);
+    const logs = await r.json();
+    const list = document.getElementById('logList');
+    if (!logs.length) {
+      list.innerHTML = '<div class="empty-state"><div class="icon">📭</div><div>尚無發送記錄</div></div>';
+      return;
+    }
+    list.innerHTML = logs.map(l => `<li class="post-item">
+      <span class="post-status ${l.status === 'success' ? 'status-sent' : 'status-failed'}">${l.status === 'success' ? '✅ 成功' : '❌ 失敗'}</span>
+      <span class="post-title">${esc(l.content_preview) || '(無內容)'}</span>
+      <span class="post-time">${l.sent_at ? fmt(l.sent_at) : ''}</span>
+    </li>`).join('');
+  } catch(e) { console.error('loadLogs', e); }
+}
+
+function fmt(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleString('zh-TW', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+}
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+// Modal 背景關閉
+document.getElementById('editModal').addEventListener('click', function(e) {
+  if (e.target === this) closeEdit();
+});
+
+// 初始化
+loadStats();
+loadPosts();
+loadLogs();
+</script>
+</body>
+</html>
