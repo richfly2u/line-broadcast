@@ -3,9 +3,21 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-# Railway 會提供 DATABASE_URL 環境變數（PostgreSQL）
-# 本地開發用 SQLite
-DATABASE_URL = os.getenv("DATABASE_URL", "")
+def _get_database_url() -> str:
+    """優先使用 DATABASE_URL，否則從個別 PG 變數組裝，最後回退 SQLite。"""
+    url = os.getenv("DATABASE_URL", "")
+    if url:
+        return url
+    pg_host = os.getenv("PGHOST", "")
+    pg_port = os.getenv("PGPORT", "5432")
+    pg_user = os.getenv("PGUSER", "")
+    pg_pass = os.getenv("PGPASSWORD", "")
+    pg_db = os.getenv("PGDATABASE", "railway")
+    if pg_host and pg_user:
+        return f"postgresql://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}"
+    return ""
+
+DATABASE_URL = _get_database_url()
 
 if DATABASE_URL:
     # PostgreSQL（Railway 生產環境）
