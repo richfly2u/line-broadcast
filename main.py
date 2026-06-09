@@ -391,6 +391,12 @@ def format_post(p: Post):
     }
 
 
+@app.get("/share", response_class=HTMLResponse)
+async def share_page():
+    with open(os.path.join(os.path.dirname(__file__), "templates", "share.html"), encoding="utf-8") as f:
+        return f.read()
+
+
 # 管理後台（SPA）
 @app.get("/admin", response_class=HTMLResponse)
 async def admin_panel():
