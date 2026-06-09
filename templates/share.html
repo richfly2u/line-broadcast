@@ -41,17 +41,16 @@ body{
   position:absolute;inset:-2px;
   border-radius:30px;
   background:conic-gradient(from 0deg, #ff0066, #ff6600, #ffcc00, #00cc44, #0099ff, #6633ff, #ff0066);
-  opacity:0.8;
+  opacity:0.4;
   z-index:-1;
 }
 
-/* Glow dot - static rainbow */
+/* Glow dot - neutral */
 .glow-dot{
-  position:absolute;top:-100px;right:-100px;width:250px;height:250px;
+  position:absolute;top:-120px;right:-120px;width:300px;height:300px;
   border-radius:50%;
-  background:conic-gradient(from 0deg, rgba(255,0,102,0.12), rgba(255,102,0,0.08), rgba(255,204,0,0.1), rgba(0,204,68,0.08), rgba(0,153,255,0.12), rgba(102,51,255,0.1), rgba(255,0,102,0.12));
+  background:radial-gradient(circle, rgba(180,200,255,0.06) 0%, transparent 70%);
   pointer-events:none;
-  filter:blur(20px);
 }
 
 /* Avatar with glow */
