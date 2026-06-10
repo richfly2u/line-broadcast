@@ -6,7 +6,7 @@
 <title>加我榮哥為好友</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{height:auto;min-height:100dvh}
+html,body{height:100dvh;overflow:hidden}
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Noto Sans TC",sans-serif;
   display:flex;align-items:center;justify-content:center;padding:10px;
@@ -20,13 +20,15 @@ body{
   backdrop-filter:blur(20px);
   -webkit-backdrop-filter:blur(20px);
   border-radius:24px;
-  padding:14px 20px;
+  padding:16px 22px;
   max-width:340px;width:100%;
+  height:calc(100dvh - 20px);
   border:1px solid rgba(255,255,255,0.06);
   box-shadow:0 24px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
   text-align:center;
   position:relative;
-  display:flex;flex-direction:column;align-items:center;
+  overflow:hidden;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
 }
 .card::after{
   content:'';position:absolute;inset:-1px;
@@ -40,51 +42,51 @@ body{
 .badge{
   display:inline-flex;align-items:center;gap:4px;
   background:rgba(255,102,0,0.1);color:#ff6600;font-size:11px;font-weight:600;
-  padding:4px 12px;border-radius:16px;
+  padding:4px 12px;border-radius:16px;margin-bottom:14px;
   border:1px solid rgba(255,102,0,0.15);
 }
 
 /* Avatar */
 .avatar-wrap{
-  position:relative;width:68px;height:68px;margin:6px auto 0;
+  position:relative;width:68px;height:68px;margin:0 auto 14px;
 }
 .avatar-glow{
   position:absolute;inset:-6px;border-radius:50%;
   background:conic-gradient(#ff0066,#ff6600,#ffcc00,#00cc44,#0099ff,#6633ff,#ff0066);
   opacity:0.4;animation:gb 3s ease-in-out infinite;
 }
-@keyframes gb{0%,100%{opacity:0.35;transform:scale(0.95)}50%{opacity:0.65;transform:scale(1.08)}}
+@keyframes gb{0%,100%{opacity:0.1;transform:scale(0.88)}50%{opacity:1;transform:scale(1.15)}}
 .avatar-inner{
   position:relative;z-index:1;width:68px;height:68px;border-radius:50%;
   background:linear-gradient(135deg,#0f141c,#1a2230);
-  border:2px solid rgba(6,199,85,0.3);
+  border:2.5px solid rgba(6,199,85,0.3);
   display:flex;align-items:center;justify-content:center;overflow:hidden;
   animation:ib 3s ease-in-out infinite;
 }
-@keyframes ib{0%,100%{transform:scale(0.95)}50%{transform:scale(1.05)}}
+@keyframes ib{0%,100%{transform:scale(0.88)}50%{transform:scale(1.12)}}
 .avatar-inner span{
   font-size:28px;line-height:1;animation:cb 3s ease-in-out infinite;
 }
-@keyframes cb{0%,100%{transform:scale(0.92)}50%{transform:scale(1.06)}}
+@keyframes cb{0%,100%{transform:scale(0.5);opacity:0.2}50%{transform:scale(1.12);opacity:1}}
 
-h1{font-size:19px;font-weight:700;color:#fff;letter-spacing:-0.3px;margin-top:4px}
-.subtitle{font-size:12px;color:rgba(255,255,255,0.45);margin-top:1px}
+h1{font-size:19px;font-weight:700;color:#fff;letter-spacing:-0.3px;margin-top:14px}
+.subtitle{font-size:12px;color:rgba(255,255,255,0.45);margin-top:14px}
 .subtitle span{color:#06C755;font-weight:600}
 
 /* Stats */
-.stats{display:flex;justify-content:center;gap:18px;margin-top:6px}
+.stats{display:flex;justify-content:center;gap:18px;margin-top:14px}
 .stat-item{text-align:center}
 .stat-num{font-size:15px;font-weight:700;color:#fff}
 .stat-label{font-size:10px;color:rgba(255,255,255,0.3);margin-top:1px}
 
 /* Divider */
-.divider{display:flex;align-items:center;gap:8px;width:100%;margin:6px 0 5px}
+.divider{display:flex;align-items:center;gap:8px;width:100%;margin:14px 0}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent)}
 .divider span{color:rgba(255,255,255,0.3);font-size:10px;white-space:nowrap}
 
 /* QR */
 .qr-box{
-  background:rgba(255,255,255,0.03);border-radius:10px;padding:6px;
+  background:rgba(255,255,255,0.03);border-radius:10px;padding:6px;margin-bottom:14px;
   border:1px solid rgba(255,255,255,0.06);
 }
 .qr-box img{width:115px;height:115px;display:block;margin:0 auto;border-radius:4px}
@@ -94,7 +96,7 @@ h1{font-size:19px;font-weight:700;color:#fff;letter-spacing:-0.3px;margin-top:4p
 .btn{
   display:block;width:100%;padding:9px 16px;border:none;border-radius:10px;
   font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;text-align:center;
-  transition:all 0.3s;margin-top:5px;
+  transition:all 0.3s;
 }
 .btn-primary{
   background:linear-gradient(135deg,#06C755,#00d85a);color:#fff;
@@ -102,7 +104,7 @@ h1{font-size:19px;font-weight:700;color:#fff;letter-spacing:-0.3px;margin-top:4p
 }
 .btn-primary:active{transform:translateY(0)}
 
-.note{font-size:9px;color:rgba(255,255,255,0.2);margin-top:5px;line-height:1.4}
+.note{font-size:9px;color:rgba(255,255,255,0.2);margin-top:14px;line-height:1.7}
 </style>
 </head>
 <body>
