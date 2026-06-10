@@ -154,22 +154,6 @@ h1{
   font-size:12px;color:rgba(255,255,255,0.2);margin-top:20px;line-height:1.6;
 }
 
-/* Copy button */
-.copy-wrap{
-  margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px;
-}
-.copy-link{
-  font-size:12px;color:rgba(255,255,255,0.4);
-  background:rgba(255,255,255,0.04);padding:6px 14px;border-radius:8px;
-  text-decoration:none;font-weight:500;cursor:pointer;
-  border:1px solid rgba(255,255,255,0.05);
-  transition:all 0.2s;
-}
-.copy-link:hover{
-  color:#06C755;background:rgba(6,199,85,0.08);
-  border-color:rgba(6,199,85,0.15);
-}
-
 /* Stats line */
 .stats{
   display:flex;justify-content:center;gap:24px;margin-bottom:24px;
@@ -223,13 +207,9 @@ h1{
   <a href="https://line.me/R/ti/p/%40097hfnuw" class="btn btn-primary" target="_blank">
     💬 打開 LINE 加好友
   </a>
-  <a href="https://line.me/R/ti/p/%40097hfnuw" class="btn btn-outline" target="_blank">
-    🔗 複製連結加入
+  <a href="javascript:void(0)" class="btn btn-outline" onclick="navigator.clipboard?.writeText('https://line.me/R/ti/p/%40097hfnuw');this.innerHTML='✅ 已複製';setTimeout(()=>this.innerHTML='📋 複製連結',1500)">
+    📋 複製連結
   </a>
-
-  <div class="copy-wrap">
-    <span class="copy-link" onclick="navigator.clipboard?.writeText('https://line.me/R/ti/p/%40097hfnuw');this.textContent='✅ 已複製';setTimeout(()=>this.textContent='📋 複製好友連結',1500)">📋 複製好友連結</span>
-  </div>
 
   <div class="note">
     加入後不打擾您 🙏<br>只在有重要消息時推播通知
