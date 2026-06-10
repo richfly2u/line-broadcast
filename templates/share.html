@@ -15,11 +15,8 @@ body{
 
 /* Glass card */
 .card{
-  background:rgba(20,24,32,0.88);
-  background-image: url('/static/bg_texture.jpg');
-  background-blend-mode: overlay;
-  background-size: cover;
-  background-position: center;
+  background: rgba(18,22,28,0.88) url('/static/bg_texture.jpg') center / cover;
+  background-blend-mode: soft-light;
   backdrop-filter:blur(20px);
   -webkit-backdrop-filter:blur(20px);
   border-radius:28px;
@@ -40,8 +37,6 @@ body{
   background:rgba(255,255,255,0.06);
   z-index:-1;
 }
-
-/* Glow dot - removed */
 
 /* Avatar with glow */
 .avatar-wrap{
