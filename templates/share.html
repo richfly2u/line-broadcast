@@ -6,95 +6,95 @@
 <title>加我榮哥為好友</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100dvh;overflow:hidden}
+html,body{height:auto;min-height:100dvh}
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Noto Sans TC",sans-serif;
   display:flex;align-items:center;justify-content:center;padding:10px;
   background:#0b0e14;
 }
 
-/* Card fills viewport, flex column spreads elements */
+/* Card fills screen */
 .card{
   background: rgba(18,22,28,0.88) url('/static/bg_texture.jpg') center / cover;
   background-blend-mode: soft-light;
   backdrop-filter:blur(20px);
   -webkit-backdrop-filter:blur(20px);
-  border-radius:20px;
-  padding:18px 22px;
+  border-radius:24px;
+  padding:14px 20px;
   max-width:340px;width:100%;
-  height:calc(100dvh - 20px);
   border:1px solid rgba(255,255,255,0.06);
   box-shadow:0 24px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
   text-align:center;
   position:relative;
-  overflow:hidden;
-  display:flex;flex-direction:column;justify-content:center;align-items:center;
-  gap:0;
+  display:flex;flex-direction:column;align-items:center;
 }
 .card::after{
   content:'';position:absolute;inset:-1px;
-  border-radius:20px;background:rgba(255,255,255,0.06);z-index:-1;
+  border-radius:24px;background:rgba(255,255,255,0.06);z-index:-1;
 }
 
-/* Flexible spacer elements so content fills the height */
-.top-spacer{flex:1}
+/* Content groups spaced with justify-content: space-between */
 .content-group{flex:none}
-.bottom-spacer{flex:1.2}
+
+/* Badge */
+.badge{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(255,102,0,0.1);color:#ff6600;font-size:11px;font-weight:600;
+  padding:4px 12px;border-radius:16px;
+  border:1px solid rgba(255,102,0,0.15);
+}
 
 /* Avatar */
 .avatar-wrap{
-  position:relative;width:60px;height:60px;margin:0 auto;
+  position:relative;width:68px;height:68px;margin:6px auto 0;
 }
 .avatar-glow{
-  position:absolute;inset:-5px;border-radius:50%;
+  position:absolute;inset:-6px;border-radius:50%;
   background:conic-gradient(#ff0066,#ff6600,#ffcc00,#00cc44,#0099ff,#6633ff,#ff0066);
   opacity:0.4;animation:gb 3s ease-in-out infinite;
 }
 @keyframes gb{0%,100%{opacity:0.35;transform:scale(0.95)}50%{opacity:0.65;transform:scale(1.08)}}
 .avatar-inner{
-  position:relative;z-index:1;width:60px;height:60px;border-radius:50%;
+  position:relative;z-index:1;width:68px;height:68px;border-radius:50%;
   background:linear-gradient(135deg,#0f141c,#1a2230);
-  border:2.5px solid rgba(6,199,85,0.3);
+  border:2px solid rgba(6,199,85,0.3);
   display:flex;align-items:center;justify-content:center;overflow:hidden;
   animation:ib 3s ease-in-out infinite;
 }
 @keyframes ib{0%,100%{transform:scale(0.95)}50%{transform:scale(1.05)}}
 .avatar-inner span{
-  font-size:26px;line-height:1;animation:cb 3s ease-in-out infinite;
+  font-size:28px;line-height:1;animation:cb 3s ease-in-out infinite;
 }
 @keyframes cb{0%,100%{transform:scale(0.92)}50%{transform:scale(1.06)}}
 
-h1{font-size:19px;font-weight:700;color:#fff;letter-spacing:-0.3px;margin-top:6px}
-.subtitle{font-size:12px;color:rgba(255,255,255,0.45);margin-top:2px}
-.subtitle a{color:#06C755;font-weight:600;text-decoration:none}
+h1{font-size:19px;font-weight:700;color:#fff;letter-spacing:-0.3px;margin-top:4px}
+.subtitle{font-size:12px;color:rgba(255,255,255,0.45);margin-top:1px}
+.subtitle span{color:#06C755;font-weight:600}
 
-.badge{
-  display:inline-flex;align-items:center;gap:4px;
-  background:rgba(255,102,0,0.1);color:#ff6600;font-size:10px;font-weight:600;
-  padding:3px 10px;border-radius:14px;margin-bottom:8px;
-  border:1px solid rgba(255,102,0,0.15);
-}
-
-.stats{display:flex;justify-content:center;gap:20px;margin-top:12px}
+/* Stats */
+.stats{display:flex;justify-content:center;gap:18px;margin-top:6px}
 .stat-item{text-align:center}
 .stat-num{font-size:15px;font-weight:700;color:#fff}
-.stat-label{font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px}
+.stat-label{font-size:10px;color:rgba(255,255,255,0.3);margin-top:1px}
 
-.divider{display:flex;align-items:center;gap:8px;width:100%;margin:10px 0 8px}
+/* Divider */
+.divider{display:flex;align-items:center;gap:8px;width:100%;margin:6px 0 5px}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent)}
 .divider span{color:rgba(255,255,255,0.3);font-size:10px;white-space:nowrap}
 
+/* QR */
 .qr-box{
   background:rgba(255,255,255,0.03);border-radius:10px;padding:6px;
   border:1px solid rgba(255,255,255,0.06);
 }
-.qr-box img{width:100px;height:100px;display:block;margin:0 auto;border-radius:4px}
-.qr-hint{font-size:9px;color:rgba(255,255,255,0.35);margin-top:3px}
+.qr-box img{width:115px;height:115px;display:block;margin:0 auto;border-radius:4px}
+.qr-hint{font-size:9px;color:rgba(255,255,255,0.35);margin-top:2px}
 
+/* Button */
 .btn{
-  display:block;width:100%;padding:10px 16px;border:none;border-radius:10px;
+  display:block;width:100%;padding:9px 16px;border:none;border-radius:10px;
   font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;text-align:center;
-  transition:all 0.3s;margin-top:8px;
+  transition:all 0.3s;margin-top:5px;
 }
 .btn-primary{
   background:linear-gradient(135deg,#06C755,#00d85a);color:#fff;
@@ -102,12 +102,11 @@ h1{font-size:19px;font-weight:700;color:#fff;letter-spacing:-0.3px;margin-top:6p
 }
 .btn-primary:active{transform:translateY(0)}
 
-.note{font-size:9px;color:rgba(255,255,255,0.2);margin-top:10px;line-height:1.4}
+.note{font-size:9px;color:rgba(255,255,255,0.2);margin-top:5px;line-height:1.4}
 </style>
 </head>
 <body>
 <div class="card">
-  <div class="top-spacer"></div>
   <div class="content-group">
     <div class="badge">🌟 榮哥好友限定</div>
     <div class="avatar-wrap">
@@ -115,14 +114,13 @@ h1{font-size:19px;font-weight:700;color:#fff;letter-spacing:-0.3px;margin-top:6p
       <div class="avatar-inner"><span>👑</span></div>
     </div>
     <h1>加我榮哥為好友</h1>
-    <p class="subtitle">🔥 好友募集中 · <a href="https://line.me/R/ti/p/%40097hfnuw" target="_blank">立即加入</a></p>
+    <p class="subtitle">🔥 好友募集中 · <span>立即加入</span></p>
     <div class="stats">
       <div class="stat-item"><div class="stat-num">🥘</div><div class="stat-label">素食饗宴</div></div>
       <div class="stat-item"><div class="stat-num">🎁</div><div class="stat-label">好康趣聞</div></div>
       <div class="stat-item"><div class="stat-num">📢</div><div class="stat-label">活動通知</div></div>
     </div>
   </div>
-  <div class="bottom-spacer"></div>
   <div class="content-group" style="width:100%">
     <div class="divider"><span>📱 掃碼加入</span></div>
     <div class="qr-box">
@@ -132,7 +130,6 @@ h1{font-size:19px;font-weight:700;color:#fff;letter-spacing:-0.3px;margin-top:6p
     <a href="https://line.me/R/ti/p/%40097hfnuw" class="btn btn-primary" target="_blank">💬 打開 LINE 加好友</a>
     <div class="note">加入後不打擾您 🙏<br>只在有重要消息時推播通知</div>
   </div>
-  <div class="bottom-spacer"></div>
 </div>
 </body>
 </html>
